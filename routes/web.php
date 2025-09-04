@@ -24,3 +24,4 @@ Route::get('/sisben/consulta/{cedula}/{documento_profesional?}', [SisbenControll
 
 // Rutas para Efectividad MEF
 Route::get('/efectividad-mef/{documento_profesional}', [EfectividadMefController::class, 'index'])->name('efectividad-mef.index');
+Route::post('/efectividad-mef/guardar-encuesta', [EfectividadMefController::class, 'guardarEncuesta'])->name('efectividad-mef.guardar-encuesta');

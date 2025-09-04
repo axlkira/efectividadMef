@@ -400,7 +400,48 @@
                 });
 
                 if (isValid) {
-                    showSuccessModal();
+                    // Obtener datos del formulario
+                    const formData = new FormData(surveyForm[0]);
+                    const folio = $('#modalFolio').text();
+                    
+                    // Buscar el idintegrantetitular del folio actual
+                    let idintegrantetitular = '';
+                    $('#usersTable tbody tr').each(function() {
+                        if ($(this).find('td:first').text() === folio) {
+                            idintegrantetitular = $(this).find('.open-survey-btn').data('folio');
+                        }
+                    });
+                    
+                    // Preparar datos para enviar
+                    const data = {
+                        folio: folio,
+                        idintegrantetitular: idintegrantetitular,
+                        documento_profesional: {{ request()->route('documento_profesional') }},
+                        status: formData.get('status'),
+                        serviceSatisfaction: formData.get('serviceSatisfaction'),
+                        opportunityHelpful: formData.get('opportunityHelpful'),
+                        managerTreatment: formData.get('managerTreatment'),
+                        likedAspect: formData.get('likedAspect'),
+                        dislikedAspect: formData.get('dislikedAspect'),
+                        respondentName: formData.get('respondentName'),
+                        respondentPhone: formData.get('respondentPhone'),
+                        _token: '{{ csrf_token() }}'
+                    };
+                    
+                    // Enviar datos al servidor
+                    $.ajax({
+                        url: '{{ route("efectividad-mef.guardar-encuesta") }}',
+                        type: 'POST',
+                        data: data,
+                        success: function(response) {
+                            if (response.success) {
+                                showSuccessModal();
+                            }
+                        },
+                        error: function() {
+                            showToast('Error al guardar la encuesta.', 'error');
+                        }
+                    });
                 } else {
                     showToast('Por favor, complete todos los campos obligatorios.', 'error');
                 }
