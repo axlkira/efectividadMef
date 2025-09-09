@@ -68,6 +68,12 @@ class UsuarioEncuesta extends Model
             ->where('thp.folioactivo', 1)
             // Validación de que no hayan pasado más de 20 días desde la fecha de servicio
             ->whereRaw('DATEDIFF(NOW(), visitas_tipo_1.created_at) <= 20')
+            // Excluir folios que ya tienen encuesta guardada
+            ->whereNotExists(function($query) {
+                $query->select(DB::raw(1))
+                      ->from('t22_encuestas_satisfaccion_mef')
+                      ->whereRaw('t22_encuestas_satisfaccion_mef.folio = thp.folio');
+            })
             ->orderBy('thp.folio', 'asc')
             ->get();
     }

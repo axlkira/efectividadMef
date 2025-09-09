@@ -19,6 +19,7 @@ class EncuestaSatisfaccionMef extends Model
         'aspecto_gustado',
         'aspecto_no_gustado',
         'nombre_encuestado',
-        'telefono_encuestado'
+        'telefono_encuestado',
+        'linea'
     ];
 }

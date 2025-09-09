@@ -28,7 +28,8 @@ class EfectividadMefController extends Controller
             'aspecto_gustado' => $request->likedAspect,
             'aspecto_no_gustado' => $request->dislikedAspect,
             'nombre_encuestado' => $request->respondentName,
-            'telefono_encuestado' => $request->respondentPhone
+            'telefono_encuestado' => $request->respondentPhone,
+            'linea' => $request->desclinea
         ]);
         
         return response()->json(['success' => true]);

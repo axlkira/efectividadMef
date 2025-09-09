@@ -404,11 +404,13 @@
                     const formData = new FormData(surveyForm[0]);
                     const folio = $('#modalFolio').text();
                     
-                    // Buscar el idintegrantetitular del folio actual
+                    // Buscar el idintegrantetitular y la línea del folio actual
                     let idintegrantetitular = '';
+                    let desclinea = '';
                     $('#usersTable tbody tr').each(function() {
                         if ($(this).find('td:first').text() === folio) {
                             idintegrantetitular = $(this).find('.open-survey-btn').data('folio');
+                            desclinea = $(this).find('td:eq(7)').text(); // Columna de Línea Estación
                         }
                     });
                     
@@ -425,6 +427,7 @@
                         dislikedAspect: formData.get('dislikedAspect'),
                         respondentName: formData.get('respondentName'),
                         respondentPhone: formData.get('respondentPhone'),
+                        desclinea: desclinea,
                         _token: '{{ csrf_token() }}'
                     };
                     
