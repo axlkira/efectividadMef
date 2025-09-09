@@ -83,16 +83,16 @@
             </div>
             
             <nav class="mt-5 flex-1">
-                <a href="#" class="flex items-center px-5 py-3 text-primary-500 bg-primary-50 dark:bg-gray-700 font-medium">
+                <a href="{{ url()->current() }}" class="flex items-center px-5 py-3 text-primary-500 bg-primary-50 dark:bg-gray-700 font-medium">
                     <i class="fas fa-users mr-3"></i> Gestión de Usuarios
                 </a>
-               <!--  <a href="#" class="flex items-center px-5 py-3 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-                    <i class="fas fa-chart-bar mr-3"></i> Reportes
-                </a> -->
+                <a href="https://unidadfamiliamedellin.com.co/metodologia2servidor/index.php/c_login/fc_vlogin" class="flex items-center px-5 py-3 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+                    <i class="fas fa-sign-out-alt mr-3"></i> Salir
+                </a>
             </nav>
             
             <div class="p-5 border-t border-gray-200 dark:border-gray-700">
-                <<!-- div class="flex items-center">
+                <!-- div class="flex items-center">
                     <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center">
                         <i class="fas fa-user text-primary-500 dark:text-primary-400"></i>
                     </div>
@@ -204,7 +204,7 @@
                                         <td>{{ $usuario->descripcion_linea }}</td>
                                         <td>{{ $usuario->fecharegistro }}</td>
                                         <td>
-                                            <button class='open-survey-btn text-primary-500 hover:text-primary-700' data-folio="{{ $usuario->folio }}">
+                                            <button class='open-survey-btn text-primary-500 hover:text-primary-700' data-folio="{{ $usuario->folio }}" data-idintegrantetitular="{{ $usuario->idintegrantetitular }}">
                                                 <i class='fas fa-poll mr-1'></i> Encuesta
                                             </button>
                                         </td>
@@ -379,7 +379,10 @@
 
             $('#usersTable tbody').on('click', '.open-survey-btn', function() {
                 const folio = $(this).data('folio');
+                const idintegrantetitular = $(this).data('idintegrantetitular');
                 openSurveyModal(folio);
+                // Guardar el idintegrantetitular en un campo oculto para usarlo al enviar el formulario
+                $('#survey-modal').data('idintegrantetitular', idintegrantetitular);
             });
 
             $('#close-modal-btn, #cancel-survey-btn, .modal-overlay').on('click', closeSurveyModal);
@@ -404,12 +407,13 @@
                     const formData = new FormData(surveyForm[0]);
                     const folio = $('#modalFolio').text();
                     
-                    // Buscar el idintegrantetitular y la línea del folio actual
-                    let idintegrantetitular = '';
+                    // Obtener el idintegrantetitular guardado en el modal y la línea actual
+                    let idintegrantetitular = $('#survey-modal').data('idintegrantetitular');
                     let desclinea = '';
+                    
+                    // Obtener la descripción de la línea
                     $('#usersTable tbody tr').each(function() {
                         if ($(this).find('td:first').text() === folio) {
-                            idintegrantetitular = $(this).find('.open-survey-btn').data('folio');
                             desclinea = $(this).find('td:eq(7)').text(); // Columna de Línea Estación
                         }
                     });
