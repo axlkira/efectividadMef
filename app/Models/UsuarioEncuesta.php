@@ -23,7 +23,7 @@ class UsuarioEncuesta extends Model
     
     public static function getUsuariosParaEncuesta($usuarioId)
     {
-        // Consulta para traer nombres correctos del titular
+        // Consulta para traer nombres correctos del titular con validaciones adicionales
         return DB::table('t1_principalhogar_s as thp')
             ->select([
                 'thp.folio',
@@ -40,12 +40,14 @@ class UsuarioEncuesta extends Model
                 DB::raw('COALESCE(tih.celular, "") as celular'),
                 DB::raw('COALESCE(tvn.linea, "") as desclinea'),
                 DB::raw('COALESCE(tvn.descripcion, "Sin Visita") as descripcion'),
+                DB::raw('COALESCE(nombres_linea.descripcion, "Sin Descripción") as descripcion_linea'),
                 DB::raw('COALESCE(tvr.finvisita, "") as fecharegistro'),
                 'thp.folioactivo',
                 DB::raw('COALESCE(tvr.linea, "") as idestacion'),
                 DB::raw('COALESCE(tih.documento, "") as documento'),
                 DB::raw('COALESCE(tcf.nombrecif, "") as cif'),
-                DB::raw('COALESCE(tu.doc_dinamizador, "") as docgestor')
+                DB::raw('COALESCE(tu.doc_dinamizador, "") as docgestor'),
+                'visitas_tipo_1.created_at as fecha_visita_tipo_1'
             ])
             ->join('t1_integranteshogar_s as tih', 'thp.idintegrantetitular', '=', 'tih.idintegrante')
             ->leftJoin('t1_hogardatosgeograficos_s as thg', 'thp.folio', '=', 'thg.folio')
@@ -55,11 +57,17 @@ class UsuarioEncuesta extends Model
                 $join->on('thp.folio', '=', 'tvr.folio')
                      ->whereRaw('tvr.finvisita = (SELECT MAX(finvisita) FROM t1_visitasrealizadas_s WHERE folio = thp.folio)');
             })
+            // Join para verificar si existe una visita tipo 1 (linea = 200)
+            ->join(DB::raw('(SELECT folio, linea, created_at FROM t1_visitasrealizadas_s WHERE linea = 200) as visitas_tipo_1'), 
+                  'thp.folio', '=', 'visitas_tipo_1.folio')
             ->leftJoin('t_visitasrealizadasnombres_s as tvn', 'tvr.linea', '=', 'tvn.linea')
+            ->leftJoin('t_visitasrealizadasnombres_s as nombres_linea', 'visitas_tipo_1.linea', '=', 'nombres_linea.linea')
             ->leftJoin('t_usuario as tu', 'thp.usuario', '=', 'tu.documento')
             ->leftJoin('t_cif as tcf', 'tu.cif', '=', 'tcf.id')
             ->where('thp.usuario', $usuarioId)
             ->where('thp.folioactivo', 1)
+            // Validación de que no hayan pasado más de 20 días desde la fecha de servicio
+            ->whereRaw('DATEDIFF(NOW(), visitas_tipo_1.created_at) <= 20')
             ->orderBy('thp.folio', 'asc')
             ->get();
     }

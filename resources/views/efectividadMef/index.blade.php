@@ -201,7 +201,7 @@
                                         <td>{{ $usuario->direccion }}</td>
                                         <td>{{ $usuario->telefono }}</td>
                                         <td>{{ $usuario->celular }}</td>
-                                        <td>{{ $usuario->desclinea }}</td>
+                                        <td>{{ $usuario->descripcion_linea }}</td>
                                         <td>{{ $usuario->fecharegistro }}</td>
                                         <td>
                                             <button class='open-survey-btn text-primary-500 hover:text-primary-700' data-folio="{{ $usuario->folio }}">
