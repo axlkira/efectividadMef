@@ -86,13 +86,13 @@
                 <a href="#" class="flex items-center px-5 py-3 text-primary-500 bg-primary-50 dark:bg-gray-700 font-medium">
                     <i class="fas fa-users mr-3"></i> Gestión de Usuarios
                 </a>
-                <a href="#" class="flex items-center px-5 py-3 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+               <!--  <a href="#" class="flex items-center px-5 py-3 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
                     <i class="fas fa-chart-bar mr-3"></i> Reportes
-                </a>
+                </a> -->
             </nav>
             
             <div class="p-5 border-t border-gray-200 dark:border-gray-700">
-                <div class="flex items-center">
+                <<!-- div class="flex items-center">
                     <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-gray-700 flex items-center justify-center">
                         <i class="fas fa-user text-primary-500 dark:text-primary-400"></i>
                     </div>
@@ -100,7 +100,7 @@
                         <p class="text-sm font-medium dark:text-white">Administrador</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">admin@encuestasapp.com</p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </aside>
 
@@ -166,12 +166,12 @@
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-100 dark:bg-gray-900">
                 <div class="max-w-7xl mx-auto">
                     <!-- Stats Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-5"><div class="flex justify-between"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Total Usuarios</p><p class="text-2xl font-bold dark:text-white">3,086</p></div><div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center"><i class="fas fa-users text-blue-500 dark:text-blue-400"></i></div></div></div>
                         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-5"><div class="flex justify-between"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Encuestas Completadas</p><p class="text-2xl font-bold dark:text-white">1,115</p></div><div class="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center"><i class="fas fa-check-circle text-green-500 dark:text-green-400"></i></div></div></div>
                         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-5"><div class="flex justify-between"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Satisfacción Promedio</p><p class="text-2xl font-bold dark:text-white">4.5/5</p></div><div class="w-12 h-12 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center"><i class="fas fa-star text-yellow-500 dark:text-yellow-400"></i></div></div></div>
                         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-5"><div class="flex justify-between"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Pendientes</p><p class="text-2xl font-bold dark:text-white">189</p></div><div class="w-12 h-12 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center"><i class="fas fa-clock text-red-500 dark:text-red-400"></i></div></div></div>
-                    </div>
+                    </div> -->
                     
                     <!-- Users Table -->
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
@@ -438,6 +438,11 @@
                         data: data,
                         success: function(response) {
                             if (response.success) {
+                                // Eliminar la fila de la tabla
+                                $('#usersTable').DataTable().rows((idx, data, node) => {
+                                    return $(node).find('td:first').text() === folio;
+                                }).remove().draw();
+                                
                                 showSuccessModal();
                             }
                         },
